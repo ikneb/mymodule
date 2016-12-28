@@ -1,4 +1,5 @@
 <h3 class="page-product-heading">Product Comments</h3>
+
 <div class="rte">
     <form action="" method="POST" id="comment-form">
         <div class="form-group">
@@ -27,4 +28,14 @@
 right"></i></span></button>
         </div>
     </form>
+</div>
+
+<div class="rte">
+    {foreach from=$comments item=comment}
+        <p>
+            <strong>Comment #{$comment.id_mymod_comment}:</strong>
+            {$comment.comment}<br>
+            <strong>Grade:</strong> {$comment.grade}/5<br>
+        </p><br>
+    {/foreach}
 </div>

@@ -55,20 +55,56 @@ class MyModule extends Module
             Shop::setContext(Shop::CONTEXT_ALL);
 
         return parent::install() &&
-            $this->registerHook('displayProductTabContent');
+            $this->registerHook('displayProductButtons') &&
+            $this->registerHook('displayHeader');
     }
 
-    public function hookDisplayProductTabContent($params)
+    public function hookDisplayHeader($params)
     {
+        $this->context->controller->addJS($this->_path.'views/js/mymod.js');
+        $this->context->controller->addCSS($this->_path.'views/css/mymod.css', 'all');
+    }
+
+    public function hookDisplayProductButtons($params)
+    {
+
+        $this->processProductButtons();
+        $this->assigneProductButtons();
         return $this->display(__FILE__, 'displayProductTabContent.tpl');
     }
 
+    public function processProductButtons()
+    {
+        if (Tools::isSubmit('mymod_pc_submit_comment')) {
+            $id_product = Tools::getValue('id_product');
+            $grade = Tools::getValue('grade');
+            $comment = Tools::getValue('comment');
+            $insert = array(
+                'id_product' => (int)$id_product,
+                'grade' => (int)$grade,
+                'comment' => pSQL($comment),
+                'date_add' => date('Y-m-d H:i:s'),
+            );
+            Db::getInstance()->insert('ps_mymod_comment', $insert);
+        }
+    }
+
+    public function assigneProductButtons()
+    {
+
+        $enable_grades = Configuration::get('MYMOD_GRADES');
+        $enable_comments = Configuration::get('MYMOD_COMMENTS');
+        $id_product = Tools::getValue('id_product');
+        $comments = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'mymod_comment WHERE id_product = '.(int)$id_product);
+        $this->context->smarty->assign('enable_grades', $enable_grades);
+        $this->context->smarty->assign('enable_comments', $enable_comments);
+        $this->context->smarty->assign('comments', $comments);
+    }
 
     public function processConfiguration()
     {
-        if (Tools::isSubmit('mymod_pc_form'))
-        {
-           $enable_grades = Tools::getValue('enable_grades');
+        if (Tools::isSubmit('mymod_pc_form')) {
+            $enable_grades = Tools::getValue('enable_grades');
             $enable_comments = Tools::getValue('enable_comments');
             Configuration::updateValue('MYMOD_GRADES', $enable_grades);
             Configuration::updateValue('MYMOD_COMMENTS', $enable_comments);
