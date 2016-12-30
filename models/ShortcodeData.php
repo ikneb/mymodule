@@ -12,7 +12,7 @@ class ShortcodeData extends ObjectModel
 
 
     public static $definition = array(
-        'table' => 'ps_shortcode_data',
+        'table' => 'shortcode_data',
         'primary' => 'id_shortcode_data',
         'multilang' => true,
         'fields' => array(

@@ -1,6 +1,12 @@
 <h3 class="page-product-heading">Product Comments</h3>
-
+{if isset($new_comment_posted) && $new_comment_posted eq 'error'}
+    <div class="alert alert-danger">
+        <p>{l s='Some fields of the form seems wrong, please check them before
+submitting your comment.' mod='mymodcomments'}</p>
+    </div>
+{/if}
 <div class="rte">
+    {$id_product}
     <form action="" method="POST" id="comment-form">
         <div class="form-group">
             <label for="grade">Grade:</label>
@@ -20,12 +26,11 @@
         <div class="form-group">
             <label for="comment">Comment:</label>
             <textarea name="comment" id="comment" class="form-control">
-</textarea>
+            </textarea>
         </div>
         <div class="submit">
             <button type="submit" name="mymod_pc_submit_comment"
-                    class="button btn btn-default button-medium"><span>Send<i class="iconchevron-right
-right"></i></span></button>
+                    class="button btn btn-default button-medium"><span>Send<i class="iconchevron-right right"></i></span></button>
         </div>
     </form>
 </div>
@@ -36,6 +41,7 @@ right"></i></span></button>
             <strong>Comment #{$comment.id_mymod_comment}:</strong>
             {$comment.comment}<br>
             <strong>Grade:</strong> {$comment.grade}/5<br>
-        </p><br>
+        </p>
+        <br>
     {/foreach}
 </div>
